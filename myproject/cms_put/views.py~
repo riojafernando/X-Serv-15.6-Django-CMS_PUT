@@ -1,0 +1,38 @@
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseNotFound
+from models import Pages
+
+# Create your views here.
+@csrf_exempt
+def mostrar(request, recurso):
+    user = User.objects.get(username='FeeRikku')
+    user.set_password('fernando')
+    user.save()
+    user = User.objects.get(username='FeRuuKi')
+    user.set_password('fernando')
+    user.save()
+    user = User.objects.get(username='Fernando')
+    user.set_password('fernando')
+    user.save()
+    user = User.objects.get(username='f.rioja')
+    user.set_password('fernando')
+    user.save()
+    User.check_password('FeeRikku')
+    print user
+    if request.method == "GET":
+        try:
+            fila = Pages.objects.get(name=recurso)
+            return HttpResponse(request.method + " " + str(fila.id) +
+                    "     "  + fila.name + fila.page)
+        except Pages.DoesNotExist:
+            return HttpResponseNotFound('Page not found' + recurso)
+
+    elif request.method == "PUT":
+        try:
+            cuerpo = request.body
+            fila = Pages.objects.create(name=recurso, page=cuerpo)
+            fila.save()
+            return HttpResponse("Nueva Fila")
+        except:
+            return HttpResponseNotFound("Error")
